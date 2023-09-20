@@ -7,14 +7,12 @@
         </template>
 
         <template #alert v-if="successMessage">
-             <div class="relative bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md" role="alert" @click="successMessage = ''">
+            <div class="relative bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md"
+                role="alert" @click="successMessage = ''">
                 <strong class="font-bold">Success! &nbsp;</strong>
                 <span class="block sm:inline"> {{ successMessage }}</span>
                 <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                    <Icon
-                        name="close"
-                        class="w-6 h-6 m-auto fill-gray-400"
-                    />
+                    <Icon name="close" class="w-6 h-6 m-auto fill-gray-400" />
                 </span>
             </div>
         </template>
@@ -23,23 +21,16 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="flex justify-between m-3">
-                        <TextInput
-                            id="email"
-                            v-model="form.search"
-                            type="email"
-                            class="mt-1 block w-1/3"
-                            required
-                            placeholder="Search"
-                            autocomplete="off"
-                        />
+                        <TextInput id="email" v-model="form.search" type="email" class="mt-1 block w-1/3" required
+                            placeholder="Search" autocomplete="off" />
 
-                        <Link 
+                        <Link
                             class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
                             :href="route('user-store.create')">
-                            <span>New&nbsp;</span>
-                            <span class="hidden md:inline">Store</span>
+                        <span>New&nbsp;</span>
+                        <span class="hidden md:inline">Store</span>
                         </Link>
-                    
+
                     </div>
 
                     <table class="w-full my-2 whitespace-no-wrap bg-white">
@@ -50,9 +41,8 @@
                             <th class="p-4">Location</th>
                             <th class="p-4 text-center">Action</th>
                         </tr>
-                        
-                        <tr v-for="(row, i) of stores.data"
-                            :key="row.id"
+
+                        <tr v-for="(row, i) of stores.data" :key="row.id"
                             class="border-t hover:bg-gray-100 focus-within:bg-gray-100">
 
                             <td class="p-3">
@@ -74,23 +64,15 @@
                             <td class="p-3">
                                 <div class="flex place-content-center">
                                     <div class="grid mr-4">
-                                        <Link 
-                                            class="focus:text-indigo-500"
-                                            :href="route('user-store.edit',row.id)">
-                                                <Icon
-                                                    name="pencil"
-                                                    class="w-6 h-6 m-auto fill-gray-400"
-                                                />
+                                        <Link class="focus:text-indigo-500" :href="route('user-store.edit', row.id)">
+                                        <Icon name="pencil" class="w-6 h-6 m-auto fill-gray-400" />
                                         </Link>
                                     </div>
                                     <div class="grid">
-                                    <inertia-link
-                                        style="cursor:pointer;"
-                                        class="focus:text-indigo-500"
-                                        @click="confirmDelete(row.id)"
-                                    >
-                                        <icon name="trash" class="w-6 h-6 m-auto" />
-                                    </inertia-link>
+                                        <inertia-link style="cursor:pointer;" class="focus:text-indigo-500"
+                                            @click="confirmDelete(row.id)">
+                                            <icon name="trash" class="w-6 h-6 m-auto" />
+                                        </inertia-link>
                                     </div>
                                 </div>
                             </td>
@@ -101,7 +83,7 @@
                         <Paginate :links="stores.links" />
 
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -112,16 +94,12 @@
             </template>
 
             <template #content>
-                Are you sure you want to delete this store? Please enter the word "DELETE" to confirm you would like to delete this store.
+                Are you sure you want to delete this store? Please enter the word "DELETE" to confirm you would like to
+                delete this store.
 
                 <div class="mt-4">
-                    <TextInput
-                        v-model="confirmMessage"
-                        type="text"
-                        class="mt-1 block w-3/4"
-                        autocomplete="off"
-                        @keyup.enter="deleteUser"
-                    />
+                    <TextInput v-model="confirmMessage" type="text" class="mt-1 block w-3/4" autocomplete="off"
+                        @keyup.enter="deleteUser" />
                     <p class="text-sm text-red-600">
                         {{ errors.confirmMessage }}
                     </p>
@@ -133,12 +111,7 @@
                     Cancel
                 </SecondaryButton>
 
-                <DangerButton
-                    class="ml-3"
-                    :class="{ 'opacity-25': processing }"
-                    :disabled="processing"
-                    @click="deleteUser"
-                >
+                <DangerButton class="ml-3" :class="{ 'opacity-25': processing }" :disabled="processing" @click="deleteUser">
                     Delete Store
                 </DangerButton>
             </template>
@@ -169,10 +142,10 @@ export default {
         DangerButton,
         SecondaryButton,
         Paginate
-        
+
     },
     props: {
-        success: { type: String},
+        success: { type: String },
         stores: {
             type: Object,
             default: () => { },
@@ -186,10 +159,10 @@ export default {
                 search: '',
             },
             errors: [],
-            selectedId:'',
+            selectedId: '',
             confirmingDeletion: false,
             confirmMessage: '',
-            processing:false
+            processing: false
         };
     },
     watch: {
@@ -217,7 +190,7 @@ export default {
                     onSuccess: (data) => {
                         this.confirmingDeletion = false
                         this.confirmMessage = '';
-                        this.successMessage = "Successfully delete message"
+                        this.successMessage = "Successfully delete store"
                     },
                     onError: (errors) => {
                         self.errors = errors

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
 use App\Models\UserStore;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,10 +16,12 @@ class UserStoreController extends Controller
     {
         $stores = UserStore::when($request["search"] ?? null, function ($query, $search) {
             $query->where('name', 'like', "%$search%")
-            ->orWhere('description', 'like', "%$search%");
-        })->orderBy('created_at', 'ASC')->paginate(3);
-        
-        return Inertia::render('Stores/index',[
+                ->orWhere('description', 'like', "%$search%");
+        })
+            ->where('user_id', Auth()->user()->id)
+            ->orderBy('created_at', 'ASC')->paginate(5);
+
+        return Inertia::render('Stores/index', [
             'filters' => $request->all('search'),
             "stores" => $stores
         ]);
@@ -35,14 +38,14 @@ class UserStoreController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        UserStore::create($request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'location' => 'required',
+        UserStore::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'location' => $request->location,
             'user_id' => Auth()->user()->id
-        ]));
+        ]);
 
         return redirect(route('user-store.index'))->with('success', 'Store Successfully Created');
     }
@@ -67,15 +70,15 @@ class UserStoreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UserStore $userStore)
+    public function update(UserStoreRequest $request, UserStore $userStore)
     {
         $userStore->update(
-            $request->validate([
-                'name' => 'required',
-                'description' => 'required',
-                'location' => 'required',
+            [
+                'name' => $request->name,
+                'description' => $request->description,
+                'location' => $request->location,
                 'user_id' => Auth()->user()->id
-            ])
+            ]
         );
         return redirect(route('user-store.index'))->with('success', 'Store Successfully Updated');
     }
